@@ -1,4 +1,4 @@
-# Docker hadoop yarn spark hive cluster
+# Docker Hadoop Yarn Spark Hive Cluster
 
 ## Run compose
 
