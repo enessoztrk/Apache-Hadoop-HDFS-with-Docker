@@ -12,7 +12,6 @@ docker-compose up -d
 ### Wait hadoop services start
 ```commandline
  docker logs -f cluster-master
- 
 ```
 ## Start Hive Services
 
