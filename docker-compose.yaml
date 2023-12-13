@@ -1,0 +1,83 @@
+version: "3.8"
+
+services:
+  postgresql:
+    container_name: postgresql
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Ankara06
+      POSTGRES_DB: metastore
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - cluster
+
+  cluster-master:
+    container_name: cluster-master
+    hostname: cluster-master
+    image: veribilimiokulu/ubuntu_hadoop_hive_sqoop:2.0
+    depends_on:
+      - postgresql
+    networks:
+      - cluster
+    tty: true
+    stdin_open: true
+    ports:
+      - "8088:8088"
+      - "4040:4040"
+      - "9870:9870"
+      - "19888:19888"
+      - "9000:9000"
+      - "8040:8042"
+    volumes:
+        - namenode:/usr/local/hadoop/namenode
+    entrypoint: /bin/bash -c "service ssh start; /usr/local/hadoop/start-master.sh && bash"
+
+  cluster-slave-1:
+    container_name: cluster-slave-1
+    hostname: cluster-slave-1
+    image: veribilimiokulu/ubuntu_hadoop_hive_sqoop:2.0
+    depends_on:
+      - postgresql
+      - cluster-master
+    tty: true
+    stdin_open: true
+    ports:
+      - "9864:9864"
+      - "8041:8042"
+    networks:
+      - cluster
+    volumes:
+        - datanode1:/usr/local/hadoop/hdfs/datanode
+    entrypoint: /bin/bash -c "service ssh start && sleep 30 && /usr/local/hadoop/start-slave.sh && bash"
+
+  cluster-slave-2:
+    container_name: cluster-slave-2
+    hostname: cluster-slave-2
+    image: veribilimiokulu/ubuntu_hadoop_hive_sqoop:2.0
+    depends_on:
+      - postgresql
+      - cluster-master
+    tty: true
+    stdin_open: true
+    ports:
+      - "9865:9864"
+      - "8042:8042"
+    networks:
+      - cluster
+    volumes:
+        - datanode2:/usr/local/hadoop/hdfs/datanode
+    entrypoint: /bin/bash -c "service ssh start && sleep 30 && /usr/local/hadoop/start-slave.sh && bash"
+
+networks:
+  cluster:
+    name: cluster
+    driver: bridge
+volumes:
+  postgresql_data:
+  namenode:
+  datanode1:
+  datanode2:
