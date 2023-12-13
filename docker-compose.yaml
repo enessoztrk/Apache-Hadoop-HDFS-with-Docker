@@ -7,9 +7,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Ankara06
-      POSTGRES_DB: metastore
+      POSTGRES_USER: ****
+      POSTGRES_PASSWORD: *****
+      POSTGRES_DB: ****
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     networks:
