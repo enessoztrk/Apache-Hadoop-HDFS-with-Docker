@@ -4,7 +4,7 @@
 
 `docker-compose up -d`
 `docker exec -it cluster-master bash`
-`curl -L https://raw.githubusercontent.com/erkansirin78/datasets/master/Wine.csv -o Wine.csv`
+`wget https://raw.githubusercontent.com/erkansirin78/datasets/master/Wine.csv`
 `hdfs dfs -mkdir -p /user/root/hdfs_odev`
 `hdfs dfs -put Wine.csv /user/root/hdfs_odev/`
 
